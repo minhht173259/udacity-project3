@@ -16,12 +16,16 @@ jobs:
           command: |
             docker compose -f docker-compose-build.yaml build --parallel
       - run: 
+          name: Docker images
+          command: |
+            docker images
+      - run: 
           name: Tag Docker Image
           command: |
             TAG=v1.$CIRCLE_BUILD_NUM
             docker tag udagram-api-feed $DOCKERHUB_USERNAME/udagram-api-feed:$TAG 
             docker tag udagram-api-user $DOCKERHUB_USERNAME/udagram-api-user:$TAG 
-            docker tag udagram-reverseproxy $DOCKERHUB_USERNAME/udagram-reverseproxy:$TAG 
+            docker tag reverseproxy $DOCKERHUB_USERNAME/udagram-reverseproxy:$TAG 
             docker tag udagram-frontend:local $DOCKERHUB_USERNAME/udagram-frontend:$TAG 
       - run:
           name: Push application Docker image
