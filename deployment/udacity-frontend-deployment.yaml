@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: udacity-frontend
+  labels:
+    app: udacity-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: udacity-frontend
+  template:
+    metadata:
+      labels:
+        app: udacity-frontend
+    spec:
+      containers:
+      - name: udacity-frontend
+        image: hoangminh173259/udagram-frontend:v1.3
+        envFrom:
+        - configMapRef:
+            name: env-configmap
+        - secretRef:
+            name: env-secret
+        volumeMounts:
+        - name: secret-volume
+          mountPath: "/root/.aws"
+          readOnly: true
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: 2048Mi
+            cpu: "1"
+          requests:
+            memory: 1024Mi
+            cpu: "0.5"
+      # restartPolicy: Always
+      volumes: 
+      - name: secret-volume
+        secret: 
+          secretName: aws-secret
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health
+        #     port: 8080
+        #   initialDelaySeconds: 3
+        #   periodSeconds: 3
+
+      
